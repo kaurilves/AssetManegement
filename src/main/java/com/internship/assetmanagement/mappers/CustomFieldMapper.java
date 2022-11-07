@@ -1,5 +1,8 @@
-package com.internship.assetmanagement;
+package com.internship.assetmanagement.mappers;
 
+import com.internship.assetmanagement.dtos.CustomField;
+import com.internship.assetmanagement.dtos.CustomFieldCreate;
+import com.internship.assetmanagement.entities.CustomFieldEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

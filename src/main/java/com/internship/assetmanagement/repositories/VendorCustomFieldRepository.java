@@ -1,5 +1,6 @@
-package com.internship.assetmanagement;
+package com.internship.assetmanagement.repositories;
 
+import com.internship.assetmanagement.entities.VendorCustomFieldEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

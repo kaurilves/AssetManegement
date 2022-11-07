@@ -1,5 +1,15 @@
-package com.internship.assetmanagement;
+package com.internship.assetmanagement.services;
 
+import com.internship.assetmanagement.dtos.VendorUpdate;
+import com.internship.assetmanagement.dtos.CustomField;
+import com.internship.assetmanagement.dtos.CustomFieldCreate;
+import com.internship.assetmanagement.dtos.Vendor;
+import com.internship.assetmanagement.dtos.VendorCreate;
+import com.internship.assetmanagement.entities.VendorCustomFieldEntity;
+import com.internship.assetmanagement.entities.VendorEntity;
+import com.internship.assetmanagement.mappers.VendorMapper;
+import com.internship.assetmanagement.repositories.VendorCustomFieldRepository;
+import com.internship.assetmanagement.repositories.VendorRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,6 +47,10 @@ public class VendorService {
         vendor.setCustomFields(addCustomFieldInfoToVendor(vendor.getId()));
         return vendor;
     }
+    public List<Vendor> searchVendors(String searchWord) {
+        List<VendorEntity> vendorEntities = vendorRepository.findAllBySearchWord(searchWord);
+        return vendorMapper.vendorEntitiesToVendors(vendorEntities);
+    }
 
     public Vendor updateVendor (VendorUpdate vendorUpdate){
         VendorEntity vendorEntity = vendorRepository.findById(vendorUpdate.getId()).get();
@@ -55,6 +69,7 @@ public class VendorService {
     }
 
     public void deleteVendor(Integer id){
+        deleteAllVendorCustomFields(id);
         vendorRepository.deleteById(id);
     }
 
@@ -74,6 +89,21 @@ public class VendorService {
         return customFields;
     }
 
+
+    public void deleteVendorCustomField (Integer vendorCustomFieldId){
+        Integer customFieldId = vendorCustomFieldRepository.findById(vendorCustomFieldId).get().getCustomFieldsId();
+        vendorCustomFieldRepository.deleteById(vendorCustomFieldId);
+        customFieldService.deleteCustomField(customFieldId);
+    }
+
+    public void deleteAllVendorCustomFields (Integer vendorId){
+        List<VendorCustomFieldEntity> vendorCustomFieldEntities = vendorCustomFieldRepository.findByVendorsId(vendorId);
+        for (VendorCustomFieldEntity vendorCustomFieldEntity : vendorCustomFieldEntities){
+            Integer customFieldId = vendorCustomFieldEntity.getCustomFieldsId();
+            vendorCustomFieldRepository.deleteById(vendorCustomFieldEntity.getId());
+            customFieldService.deleteCustomField(customFieldId);
+        }
+    }
 
 
 }

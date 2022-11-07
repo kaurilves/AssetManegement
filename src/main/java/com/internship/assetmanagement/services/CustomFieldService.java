@@ -1,5 +1,12 @@
-package com.internship.assetmanagement;
+package com.internship.assetmanagement.services;
 
+import com.internship.assetmanagement.dtos.CustomField;
+import com.internship.assetmanagement.dtos.CustomFieldCreate;
+import com.internship.assetmanagement.dtos.CustomFieldUpdate;
+import com.internship.assetmanagement.entities.CustomFieldEntity;
+import com.internship.assetmanagement.mappers.CustomFieldMapper;
+import com.internship.assetmanagement.repositories.CustomFieldRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
