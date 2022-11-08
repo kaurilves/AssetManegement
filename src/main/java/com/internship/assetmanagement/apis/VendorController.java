@@ -33,9 +33,9 @@ public class VendorController {
         return  vendorService.getAllVendors();
     }
 
-    @GetMapping("/vendors/{searchWord}")
-    public List<Vendor> searchVendors(@PathVariable String searchWord){
-        return  vendorService.searchVendors(searchWord);
+    @GetMapping("/vendors/{keyword}")
+    public List<Vendor> searchVendors(@PathVariable String keyword){
+        return  vendorService.searchVendors(keyword);
     }
 
     @PatchMapping

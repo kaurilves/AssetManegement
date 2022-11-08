@@ -53,10 +53,10 @@ public class VendorService {
         return vendorMapper.vendorEntitiesToVendors(vendorEntities);
     }
 
-    public List<Vendor> searchVendors(String searchWord) {
+    public List<Vendor> searchVendors(String keyword) {
         List<VendorEntity> vendorEntities = vendorRepository.
                 findByCompanyNameContainsOrAddressContainsOrWebsiteContainsOrContactNameContainsOrEmailContainsOrVendorTypeContainsOrDescriptionContains
-                        (searchWord, searchWord, searchWord, searchWord, searchWord, searchWord, searchWord);
+                        (keyword, keyword, keyword, keyword, keyword, keyword, keyword);
         return vendorMapper.vendorEntitiesToVendors(vendorEntities);
     }
 
