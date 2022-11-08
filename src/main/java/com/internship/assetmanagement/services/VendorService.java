@@ -47,8 +47,16 @@ public class VendorService {
         vendor.setCustomFields(addCustomFieldInfoToVendor(vendor.getId()));
         return vendor;
     }
+
+    public List<Vendor> getAllVendors() {
+        List<VendorEntity> vendorEntities = vendorRepository.findAll();
+        return vendorMapper.vendorEntitiesToVendors(vendorEntities);
+    }
+
     public List<Vendor> searchVendors(String searchWord) {
-        List<VendorEntity> vendorEntities = vendorRepository.findAllBySearchWord(searchWord);
+        List<VendorEntity> vendorEntities = vendorRepository.
+                findByCompanyNameContainsOrAddressContainsOrWebsiteContainsOrContactNameContainsOrEmailContainsOrVendorTypeContainsOrDescriptionContains
+                        (searchWord, searchWord, searchWord, searchWord, searchWord, searchWord, searchWord);
         return vendorMapper.vendorEntitiesToVendors(vendorEntities);
     }
 
@@ -90,9 +98,8 @@ public class VendorService {
     }
 
 
-    public void deleteVendorCustomField (Integer vendorCustomFieldId){
-        Integer customFieldId = vendorCustomFieldRepository.findById(vendorCustomFieldId).get().getCustomFieldsId();
-        vendorCustomFieldRepository.deleteById(vendorCustomFieldId);
+    public void deleteVendorCustomField (Integer customFieldId){
+        vendorCustomFieldRepository.deleteByCustomFieldsId(customFieldId);
         customFieldService.deleteCustomField(customFieldId);
     }
 
@@ -104,6 +111,7 @@ public class VendorService {
             customFieldService.deleteCustomField(customFieldId);
         }
     }
+
 
 
 }

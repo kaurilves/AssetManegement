@@ -6,7 +6,6 @@ import com.internship.assetmanagement.dtos.CustomFieldUpdate;
 import com.internship.assetmanagement.entities.CustomFieldEntity;
 import com.internship.assetmanagement.mappers.CustomFieldMapper;
 import com.internship.assetmanagement.repositories.CustomFieldRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +21,7 @@ public class CustomFieldService {
 
     public CustomField addCustomField(CustomFieldCreate customFieldCreate){
         CustomFieldEntity customFieldEntity = customFieldMapper.customFieldCreateToCustomFieldEntity (customFieldCreate);
+        customFieldRepository.save(customFieldEntity);
         return customFieldMapper.customFieldEntityToCustomField(customFieldEntity);
     }
 
@@ -41,9 +41,6 @@ public class CustomFieldService {
     public void deleteCustomField(Integer id){
         customFieldRepository.deleteById(id);
     }
-
-
-
 }
 
 

@@ -6,7 +6,6 @@ import com.internship.assetmanagement.services.VendorService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,17 +19,22 @@ public class VendorController {
     private CustomFieldService customFieldService;
 
     @PostMapping
-    public Vendor addVendor(@Valid @RequestBody VendorCreate vendorCreate){
+    public Vendor addVendor(@RequestBody VendorCreate vendorCreate){
         return  vendorService.addVendor(vendorCreate);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{vendorId}")
     public Vendor getVendor(@PathVariable Integer vendorId){
         return  vendorService.getVendor(vendorId);
     }
 
-    @GetMapping
-    public List<Vendor> searchVendors(String searchWord){
+    @GetMapping("/vendors")
+    public List<Vendor> getAllVendors(){
+        return  vendorService.getAllVendors();
+    }
+
+    @GetMapping("/vendors/{searchWord}")
+    public List<Vendor> searchVendors(@PathVariable String searchWord){
         return  vendorService.searchVendors(searchWord);
     }
 
@@ -39,24 +43,24 @@ public class VendorController {
         return  vendorService.updateVendor(vendorUpdate);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{vendorId}")
     public void deleteVendor(@PathVariable Integer vendorId){
         vendorService.deleteVendor(vendorId);
     }
 
-    @PostMapping("/custom_field/{id}")
-    public void createVendorCustomField(@PathVariable Integer vendorId, @Valid @RequestBody CustomFieldCreate customFieldCreate){
+    @PostMapping("/custom_field/{vendorId}")
+    public void createVendorCustomField(@PathVariable Integer vendorId, @RequestBody CustomFieldCreate customFieldCreate){
           vendorService.createVendorCustomField(vendorId, customFieldCreate);
     }
 
     @PatchMapping("/custom_field")
-    public void updateCustomField(@Valid @RequestBody CustomFieldUpdate customFieldUpdate){
+    public void updateCustomField(@RequestBody CustomFieldUpdate customFieldUpdate){
         customFieldService.updateCustomField(customFieldUpdate);
     }
 
-    @DeleteMapping("/custom_field/{id}")
-    public void deleteVendorCustomField(@PathVariable Integer vendorCustomFieldId){
-        vendorService.deleteVendorCustomField(vendorCustomFieldId);
+    @DeleteMapping("/custom_field/{customFieldId}")
+    public void deleteVendorCustomField(@PathVariable Integer customFieldId){
+        vendorService.deleteVendorCustomField(customFieldId);
     }
 
 }

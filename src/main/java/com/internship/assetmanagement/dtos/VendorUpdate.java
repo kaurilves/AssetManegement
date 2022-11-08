@@ -2,19 +2,15 @@ package com.internship.assetmanagement.dtos;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Data
 public class VendorUpdate {
 
-    @NotNull
+
+
     private Integer id;
 
-    @NotNull
-    @NotBlank
     private String companyName;
 
     private String address;
@@ -29,7 +25,6 @@ public class VendorUpdate {
 
     private String description;
 
-    @Positive
     private BigDecimal rate;
 
 }
