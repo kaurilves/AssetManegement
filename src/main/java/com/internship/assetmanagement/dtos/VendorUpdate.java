@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 @Data
 public class VendorUpdate {
 
-
-
     private Integer id;
+
+    private Integer userCompanyId;
 
     private String companyName;
 

@@ -19,6 +19,9 @@ public class VendorEntity {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "user_company_id", nullable = false)
+    private Integer userCompanyId;
+
     @Column(name = "company_name", nullable = false)
     private String companyName;
 

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class VendorCreate {
 
+    private Integer userCompanyId;
 
     private String companyName;
 
@@ -25,5 +26,7 @@ public class VendorCreate {
     private String description;
 
     private BigDecimal rate;
+
+
 
 }

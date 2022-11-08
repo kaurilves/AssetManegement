@@ -11,6 +11,7 @@ import java.util.List;
 public class Vendor {
 
     private Integer id;
+    private Integer userCompanyId;
     private String companyName;
     private String address;
     private String website;
