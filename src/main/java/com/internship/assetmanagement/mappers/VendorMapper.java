@@ -1,6 +1,6 @@
 package com.internship.assetmanagement.mappers;
 
-import com.internship.assetmanagement.entities.VendorEntity;
+import com.internship.assetmanagement.entities.vendor.VendorEntity;
 import com.internship.assetmanagement.dtos.Vendor;
 import com.internship.assetmanagement.dtos.VendorCreate;
 import org.mapstruct.Mapper;

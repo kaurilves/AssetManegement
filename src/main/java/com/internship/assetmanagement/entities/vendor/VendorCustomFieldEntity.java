@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.entities;
+package com.internship.assetmanagement.entities.vendor;
 
 
 

@@ -1,6 +1,6 @@
 package com.internship.assetmanagement.repositories;
 
-import com.internship.assetmanagement.entities.VendorCustomFieldEntity;
+import com.internship.assetmanagement.entities.vendor.VendorCustomFieldEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

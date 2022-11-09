@@ -1,6 +1,6 @@
 package com.internship.assetmanagement.repositories;
 
-import com.internship.assetmanagement.entities.VendorEntity;
+import com.internship.assetmanagement.entities.vendor.VendorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
