@@ -1,20 +1,22 @@
-package com.internship.assetmanagement.entities.vendor;
+package com.internship.assetmanagement.entities.asset;
 
+import com.internship.assetmanagement.entities.TeamEntity;
+import com.internship.assetmanagement.entities.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "assets")
-public class AssetEntity {
+@Table(name = "asset")
+public class AssetEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +41,8 @@ public class AssetEntity {
     @Column(name = "date_created")
     private LocalDate dateCreated;
 
-    @Column(name = "creator_user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secondary_user_id", nullable = false)
     private UserEntity creatorUser;
 
     @Column(name = "date_purchased")
@@ -75,16 +78,20 @@ public class AssetEntity {
     @Column(name = "check_out_procedure")
     private String checkOutProcedure;
 
-    @Column(name = "teams_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teams_id")
     private TeamEntity team;
 
-    @Column(name = "primary_user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_user_id")
     private UserEntity primaryUser;
 
-    @Column(name = "secondary_user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secondary_user_id")
     private UserEntity secondaryUser;
 
-    @Column(name = "parent_asset_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_asset_id")
     private AssetEntity parentAsset;
 
 

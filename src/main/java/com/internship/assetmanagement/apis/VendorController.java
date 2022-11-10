@@ -1,8 +1,8 @@
 package com.internship.assetmanagement.apis;
 
-import com.internship.assetmanagement.dtos.*;
-import com.internship.assetmanagement.services.CustomFieldService;
-import com.internship.assetmanagement.services.VendorService;
+import com.internship.assetmanagement.dtos.vendor.*;
+import com.internship.assetmanagement.services.vendor.CustomFieldService;
+import com.internship.assetmanagement.services.vendor.VendorService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

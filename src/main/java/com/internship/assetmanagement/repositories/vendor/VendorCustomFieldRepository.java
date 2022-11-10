@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.repositories;
+package com.internship.assetmanagement.repositories.vendor;
 
 import com.internship.assetmanagement.entities.vendor.VendorCustomFieldEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

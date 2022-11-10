@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.dtos;
+package com.internship.assetmanagement.dtos.vendor;
 
 
 import lombok.Data;

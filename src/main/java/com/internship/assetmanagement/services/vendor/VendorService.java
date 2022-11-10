@@ -1,15 +1,15 @@
-package com.internship.assetmanagement.services;
+package com.internship.assetmanagement.services.vendor;
 
-import com.internship.assetmanagement.dtos.VendorUpdate;
-import com.internship.assetmanagement.dtos.CustomField;
-import com.internship.assetmanagement.dtos.CustomFieldCreate;
-import com.internship.assetmanagement.dtos.Vendor;
-import com.internship.assetmanagement.dtos.VendorCreate;
+import com.internship.assetmanagement.dtos.vendor.VendorUpdate;
+import com.internship.assetmanagement.dtos.vendor.CustomField;
+import com.internship.assetmanagement.dtos.vendor.CustomFieldCreate;
+import com.internship.assetmanagement.dtos.vendor.Vendor;
+import com.internship.assetmanagement.dtos.vendor.VendorCreate;
 import com.internship.assetmanagement.entities.vendor.VendorCustomFieldEntity;
 import com.internship.assetmanagement.entities.vendor.VendorEntity;
-import com.internship.assetmanagement.mappers.VendorMapper;
-import com.internship.assetmanagement.repositories.VendorCustomFieldRepository;
-import com.internship.assetmanagement.repositories.VendorRepository;
+import com.internship.assetmanagement.mappers.vendor.VendorMapper;
+import com.internship.assetmanagement.repositories.vendor.VendorCustomFieldRepository;
+import com.internship.assetmanagement.repositories.vendor.VendorRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
