@@ -19,7 +19,6 @@ public class AssetCreate implements Serializable {
     private Integer locationId;
     private String area;
     private LocalDate dateCreated;
-    private Integer creatorUserId;
     private BigInteger barcode;
     private LocalDate datePurchased;
     private BigDecimal price;

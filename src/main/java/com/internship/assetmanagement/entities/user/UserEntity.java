@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.entities.others;
+package com.internship.assetmanagement.entities.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +22,10 @@ public class UserEntity implements Serializable {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 }

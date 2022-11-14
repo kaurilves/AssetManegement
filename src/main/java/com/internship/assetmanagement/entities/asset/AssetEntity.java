@@ -2,7 +2,7 @@ package com.internship.assetmanagement.entities.asset;
 
 import com.internship.assetmanagement.entities.others.CompanyEntity;
 import com.internship.assetmanagement.entities.others.LocationEntity;
-import com.internship.assetmanagement.entities.others.UserEntity;
+import com.internship.assetmanagement.entities.user.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;

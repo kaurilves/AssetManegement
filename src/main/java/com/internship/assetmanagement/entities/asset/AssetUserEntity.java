@@ -1,7 +1,6 @@
 package com.internship.assetmanagement.entities.asset;
 
-import com.internship.assetmanagement.entities.asset.AssetEntity;
-import com.internship.assetmanagement.entities.others.UserEntity;
+import com.internship.assetmanagement.entities.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

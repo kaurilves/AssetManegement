@@ -3,7 +3,7 @@ package com.internship.assetmanagement.services.asset;
 import com.internship.assetmanagement.dtos.asset.AssetResponse;
 import com.internship.assetmanagement.dtos.asset.AssetCreate;
 import com.internship.assetmanagement.entities.asset.*;
-import com.internship.assetmanagement.entities.others.UserEntity;
+import com.internship.assetmanagement.entities.user.UserEntity;
 import com.internship.assetmanagement.mappers.asset.AssetMapper;
 import com.internship.assetmanagement.repositories.asset.*;
 import com.internship.assetmanagement.repositories.other.LocationRepository;
@@ -13,10 +13,7 @@ import com.internship.assetmanagement.repositories.other.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 public class AssetService {
@@ -61,9 +58,9 @@ public class AssetService {
     private ActivityLogRepository activityLogRepository;
 
 
-    public AssetResponse addAsset(AssetCreate assetCreate) throws Exception {
+    public AssetResponse addAsset(UserEntity userEntity, AssetCreate assetCreate) throws Exception {
         AssetEntity assetEntity = assetMapper.assetCreateToAssetEntity(assetCreate);
-
+        assetEntity.setCreatorUser(userEntity);
         assetEntity.setDateCreated(LocalDate.now());
 
         // adds location to asset
@@ -111,12 +108,13 @@ public class AssetService {
             }
         }
 
-
+        return assetMapper.assetEntityToAssetResponse(assetEntity);
         //if asset usage is trackable, then set checked in as creator user .
-        if (assetCreate.getTrackAndLogUsage()) {
+    /*    if (assetCreate.getTrackAndLogUsage()) {
             setAssetAsCheckedInOrCheckedOut(assetEntity.getId(), assetCreate.getCreatorUserId(), null);
         }
         return assetMapper.assetEntityToAssetResponse(assetEntity);
+        */
     }
 
     public void changeAssetOperationalStatus(Integer operationalStatusId, Integer assetId, Integer userId) {
