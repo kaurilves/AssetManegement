@@ -5,19 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "asset_team")
-public class CheckInCheckOutEntity implements Serializable {
+public class ActivityLogEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,17 +27,26 @@ public class CheckInCheckOutEntity implements Serializable {
     @JoinColumn(name = "asset_id", nullable = false)
     private AssetEntity assetEntity;
 
-    @Column(name = "timestamp")
-    private LocalDateTime dateTime;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userEntity;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "activity_type")
+    @Enumerated(EnumType.STRING)
+    private ActivityType activityType;
 
     @Column(name = "comment")
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userEntity;
+    @Column(name = "timestamp")
+    @UpdateTimestamp
+    private LocalDateTime dateTime;
+
+    public ActivityLogEntity (AssetEntity assetEntity, UserEntity userEntity, ActivityType activityType){
+        this.assetEntity = assetEntity;
+        this.userEntity = userEntity;
+        this.activityType = activityType;
+        this.dateTime = LocalDateTime.now();
+    }
 }
 

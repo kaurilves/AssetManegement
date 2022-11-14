@@ -1,15 +1,22 @@
 package com.internship.assetmanagement.services.asset;
 
-import com.internship.assetmanagement.dtos.asset.Asset;
+import com.internship.assetmanagement.dtos.asset.AssetResponse;
 import com.internship.assetmanagement.dtos.asset.AssetCreate;
 import com.internship.assetmanagement.entities.asset.*;
+import com.internship.assetmanagement.entities.others.UserEntity;
 import com.internship.assetmanagement.mappers.asset.AssetMapper;
-import com.internship.assetmanagement.repositories.*;
 import com.internship.assetmanagement.repositories.asset.*;
+import com.internship.assetmanagement.repositories.other.LocationRepository;
+import com.internship.assetmanagement.repositories.other.PartRepository;
+import com.internship.assetmanagement.repositories.other.TeamRepository;
+import com.internship.assetmanagement.repositories.other.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 public class AssetService {
@@ -47,29 +54,37 @@ public class AssetService {
     @Resource
     private ReliabilityLogRepository reliabilityLogRepository;
 
+    @Resource
+    private AssetUsageLogRepository assetUsageLogRepository;
 
-    public Asset addAsset(AssetCreate assetCreate) {
+    @Resource
+    private ActivityLogRepository activityLogRepository;
+
+
+    public AssetResponse addAsset(AssetCreate assetCreate) throws Exception {
         AssetEntity assetEntity = assetMapper.assetCreateToAssetEntity(assetCreate);
 
-        // adds location to asset
-        if (assetCreate.getLocationId() != null){
-            assetEntity.setLocation(locationRepository.findById(assetCreate.getLocationId()).get());
-        } else {
-            assetEntity.setLocation(null);
-        }
+        assetEntity.setDateCreated(LocalDate.now());
 
+        // adds location to asset
+        if (assetCreate.getLocationId() != null) {
+            if (locationRepository.findById(assetCreate.getLocationId()).isEmpty()) {
+                throw new Exception("bla bla bla");
+            } assetEntity.setLocation(locationRepository.findById(assetCreate.getLocationId()).get());
+        }
         // adds primary user to asset
         if (assetCreate.getPrimaryUserId() != null) {
+            if (assetRepository.findById(assetCreate.getPrimaryUserId()).isEmpty()) {
+                throw new Exception("bla bla bla");
+            }
             assetEntity.setPrimaryUser(userRepository.findById(assetCreate.getPrimaryUserId()).get());
-        } else {
-            assetEntity.setParentAsset(null);
         }
         assetRepository.save(assetEntity);
 
         // adds parts to asset
-        if (assetCreate.getPartsIds() != null || assetCreate.getPartsIds().size() > 0) {
+        if (assetCreate.getPartsIds() != null && !assetCreate.getPartsIds().isEmpty()) {
             AssetPartEntity assetPartEntity = new AssetPartEntity();
-            for (Integer partId : assetCreate.getPartsIds()){
+            for (Integer partId : assetCreate.getPartsIds()) {
                 assetPartEntity.setAssetEntity(assetEntity);
                 assetPartEntity.setPartEntity(partRepository.findById(partId).get());
                 assetPartRepository.save(assetPartEntity);
@@ -77,9 +92,9 @@ public class AssetService {
         }
 
         // add teams to asset
-        if (assetCreate.getTeamsIds() != null || assetCreate.getTeamsIds().size() > 0) {
+        if (assetCreate.getTeamsIds() != null && !assetCreate.getTeamsIds().isEmpty()) {
             AssetTeamEntity assetTeamEntity = new AssetTeamEntity();
-            for (Integer teamId : assetCreate.getTeamsIds()){
+            for (Integer teamId : assetCreate.getTeamsIds()) {
                 assetTeamEntity.setAssetEntity(assetEntity);
                 assetTeamEntity.setTeamEntity(teamRepository.findById(teamId).get());
                 assetTeamRepository.save(assetTeamEntity);
@@ -89,42 +104,44 @@ public class AssetService {
         // add secondary users to asset entity
         if (assetCreate.getSecondaryUsersIds() != null || assetCreate.getSecondaryUsersIds().size() > 0) {
             AssetUserEntity assetUserEntity = new AssetUserEntity();
-            for (Integer secondaryUserId : assetCreate.getSecondaryUsersIds()){
+            for (Integer secondaryUserId : assetCreate.getSecondaryUsersIds()) {
                 assetUserEntity.setAssetEntity(assetEntity);
                 assetUserEntity.setUserEntity(userRepository.findById(secondaryUserId).get());
                 assetUserRepository.save(assetUserEntity);
             }
         }
 
-        // set asset as operational status to "Operational"
-        changeAssetOperationalStatus(1, assetEntity.getId());
 
-        //if asset is assigned to primary user, then set status as checked in.
-        if (assetCreate.getPrimaryUserId() != null){
-            setAssetAsCheckedInOrCheckedOut(assetEntity.getId(), assetCreate.getPrimaryUserId(), "Checked in", null);
+        //if asset usage is trackable, then set checked in as creator user .
+        if (assetCreate.getTrackAndLogUsage()) {
+            setAssetAsCheckedInOrCheckedOut(assetEntity.getId(), assetCreate.getCreatorUserId(), null);
         }
-
-
-        return assetMapper.assetEntityToAsset(assetEntity);
+        return assetMapper.assetEntityToAssetResponse(assetEntity);
     }
 
-    public void changeAssetOperationalStatus (Integer operationalStatusId, Integer assetId) {
+    public void changeAssetOperationalStatus(Integer operationalStatusId, Integer assetId, Integer userId) {
+        UserEntity userEntity = userRepository.getById(userId);
+        AssetEntity assetEntity = assetRepository.getById(assetId);
+        ActivityLogEntity activityLogEntity = new ActivityLogEntity(assetEntity, userEntity, ActivityType.RELIABILITY);
+        activityLogEntity = activityLogRepository.save(activityLogEntity);
+
         ReliabilityLogEntity reliabilityLogEntity = new ReliabilityLogEntity();
         reliabilityLogEntity.setOperationalStatusEntity(operationalStatusRepository.findById(operationalStatusId).get());
-        reliabilityLogEntity.setTimeStamp(LocalDateTime.now());
-        reliabilityLogEntity.setAssetEntity(assetRepository.findById(assetId).get());
+        reliabilityLogEntity.setActivityLogEntity(activityLogEntity);
         reliabilityLogRepository.save(reliabilityLogEntity);
     }
 
-    public void setAssetAsCheckedInOrCheckedOut(Integer assetId, Integer userId, String status, String comment){
-        CheckInCheckOutEntity checkInCheckOutEntity = new CheckInCheckOutEntity();
-        checkInCheckOutEntity.setAssetEntity(assetRepository.findById(assetId).get());
-        checkInCheckOutEntity.setUserEntity(userRepository.findById(userId).get());
-        checkInCheckOutEntity.setDateTime(LocalDateTime.now());
-        checkInCheckOutEntity.setComment(comment);
-        checkInCheckOutEntity.setStatus(status);
+    public void setAssetAsCheckedInOrCheckedOut(Integer assetId, Integer userId, String comment) throws Exception {
+        UserEntity userEntity = userRepository.getById(userId);
+        AssetEntity assetEntity = assetRepository.getById(assetId);
+        ActivityLogEntity activityLogEntity = new ActivityLogEntity(assetEntity, userEntity, ActivityType.USAGE_LOG);
+        activityLogEntity = activityLogRepository.save(activityLogEntity);
+
+        AssetUsageLogEntity assetUsageLogEntity = new AssetUsageLogEntity();
+        assetUsageLogEntity.setActivityLogEntity(activityLogEntity);
+        assetUsageLogEntity.setComment(comment);
+        assetUsageLogEntity.setIsCheckedIn(!assetUsageLogEntity.getIsCheckedIn());
+        assetUsageLogRepository.save(assetUsageLogEntity);
+
     }
-
-
-
 }

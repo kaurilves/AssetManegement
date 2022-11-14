@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssetRepository extends JpaRepository<AssetEntity, Integer> {
 
+
+
 }

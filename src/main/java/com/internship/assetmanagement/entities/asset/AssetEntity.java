@@ -66,11 +66,8 @@ public class AssetEntity implements Serializable {
     @Column(name = "residual_value")
     private BigDecimal residualValue;
 
-    @Column(name = "useful_life_unit")
-    private String usefulLifeUnit;
-
     @Column(name = "useful_life_quantity")
-    private Integer usefulLifeQuantity;
+    private Integer usefulLifeQuantityInDays;
 
     @Column(name = "date_placed_in_service")
     private LocalDate datePlacedInService;

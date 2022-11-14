@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.repositories;
+package com.internship.assetmanagement.repositories.other;
 
 import com.internship.assetmanagement.entities.others.PartEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
