@@ -1,6 +1,7 @@
-package com.internship.assetmanagement.entities.others;
+package com.internship.assetmanagement.entities.asset;
 
 import com.internship.assetmanagement.entities.asset.AssetEntity;
+import com.internship.assetmanagement.entities.others.PartEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,8 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "asset_team")
-public class AssetTeamEntity implements Serializable {
+@Table(name = "asset_part")
+public class AssetPartEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class AssetTeamEntity implements Serializable {
     private AssetEntity assetEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", nullable = false)
-    private TeamEntity teamEntity;
+    @JoinColumn(name = "part_id", nullable = false)
+    private PartEntity partEntity;
 }
 

@@ -148,12 +148,19 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`asset_reliability_status`
+-- Table `asset_management`.`operational_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`asset_reliability_status` (
+CREATE TABLE IF NOT EXISTS `asset_management`.`operational_status` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `company_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_asset_reliability_status_company1_idx` (`company_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_reliability_status_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `asset_management`.`company` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -280,9 +287,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`part_in_asset`
+-- Table `asset_management`.`asset_part`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`part_in_asset` (
+CREATE TABLE IF NOT EXISTS `asset_management`.`asset_part` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asset_id` INT NOT NULL,
   `part_id` INT NOT NULL,
@@ -301,19 +308,19 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`reliability`
+-- Table `asset_management`.`reliability_log`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`reliability` (
+CREATE TABLE IF NOT EXISTS `asset_management`.`reliability_log` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asset_id` INT NOT NULL,
-  `timestamp` DATETIME NULL DEFAULT NULL,
-  `asset_reliability_status_id` INT NOT NULL,
+  `timestamp` DATETIME NOT NULL,
+  `operatioanl_status_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_reliability_log_assets1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`asset_reliability_status_id` ASC) VISIBLE,
+  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`operatioanl_status_id` ASC) VISIBLE,
   CONSTRAINT `fk_reliability_asset_reliability_statuses1`
-    FOREIGN KEY (`asset_reliability_status_id`)
-    REFERENCES `asset_management`.`asset_reliability_status` (`id`),
+    FOREIGN KEY (`operatioanl_status_id`)
+    REFERENCES `asset_management`.`operational_status` (`id`),
   CONSTRAINT `fk_reliability_log_assets1`
     FOREIGN KEY (`asset_id`)
     REFERENCES `asset_management`.`asset` (`id`))

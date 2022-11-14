@@ -4,6 +4,8 @@ import com.internship.assetmanagement.dtos.others.Team;
 import lombok.Data;
 import org.apache.tomcat.jni.User;
 
+import javax.servlet.http.Part;
+import javax.xml.stream.Location;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,6 +20,7 @@ public class Asset implements Serializable {
     private String description;
     private String model;
     private String category;
+    private Location location;
     private String area;
     private LocalDate dateCreated;
     private User creatorUser;
@@ -33,9 +36,10 @@ public class Asset implements Serializable {
     private Boolean trackAndLogUsage;
     private String checkInProcedure;
     private String checkOutProcedure;
+    private User primaryUser;
     private List<Team> teams;
-    private String primaryUserName;
-    private List<String> secondaryUsers;
+    private List<User> secondaryUsers;
+    private List<Part> parts;
     private Asset parentAsset;
 
 

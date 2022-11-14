@@ -1,6 +1,6 @@
-package com.internship.assetmanagement.entities.others;
+package com.internship.assetmanagement.entities.asset;
 
-import com.internship.assetmanagement.entities.asset.AssetEntity;
+import com.internship.assetmanagement.entities.others.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "asset_team")
-public class AssetUserEntity implements Serializable {
+public class CheckInCheckOutEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,15 @@ public class AssetUserEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asset_id", nullable = false)
     private AssetEntity assetEntity;
+
+    @Column(name = "timestamp")
+    private LocalDateTime dateTime;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "comment")
+    private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

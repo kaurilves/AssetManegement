@@ -1,0 +1,12 @@
+insert into asset_management.company (name) values('Roadlink');
+insert into asset_management.part (name) values('filter');
+insert into asset_management.customer (name) values('VikingModum');
+insert into asset_management.user (name) values('Kaur123');
+insert into asset_management.user (name) values('Liisa321');
+insert into asset_management.user (name) values('Mihkel666');
+insert into asset_management.team (name) values('Team1');
+insert into asset_management.team (name) values('Team2');
+insert into asset_management.location (name) values('Talli 5');
+insert into asset_management.location (name) values('Liivametsa tee 6');
+insert into asset_management.operational_status (name) values('Operational');
+insert into asset_management.operational_status (name) values('Not Operational');

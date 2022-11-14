@@ -1,5 +1,7 @@
-package com.internship.assetmanagement.entities.others;
+package com.internship.assetmanagement.entities.asset;
 
+import com.internship.assetmanagement.entities.asset.AssetEntity;
+import com.internship.assetmanagement.entities.others.TeamEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,20 +15,20 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reliability_status")
-public class OperationalStatusEntity implements Serializable {
+@Table(name = "asset_team")
+public class AssetTeamEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asset_id", nullable = false)
-    private CompanyEntity companyEntity;
+    private AssetEntity assetEntity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private TeamEntity teamEntity;
 }
 

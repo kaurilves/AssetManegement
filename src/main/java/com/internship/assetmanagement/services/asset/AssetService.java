@@ -2,11 +2,7 @@ package com.internship.assetmanagement.services.asset;
 
 import com.internship.assetmanagement.dtos.asset.Asset;
 import com.internship.assetmanagement.dtos.asset.AssetCreate;
-import com.internship.assetmanagement.entities.asset.AssetEntity;
-import com.internship.assetmanagement.entities.others.AssetPartEntity;
-import com.internship.assetmanagement.entities.others.AssetTeamEntity;
-import com.internship.assetmanagement.entities.others.AssetUserEntity;
-import com.internship.assetmanagement.entities.others.ReliabilityLogEntity;
+import com.internship.assetmanagement.entities.asset.*;
 import com.internship.assetmanagement.mappers.asset.AssetMapper;
 import com.internship.assetmanagement.repositories.*;
 import com.internship.assetmanagement.repositories.asset.*;
@@ -90,7 +86,7 @@ public class AssetService {
             }
         }
 
-        // add secondary users to asset
+        // add secondary users to asset entity
         if (assetCreate.getSecondaryUsersIds() != null || assetCreate.getSecondaryUsersIds().size() > 0) {
             AssetUserEntity assetUserEntity = new AssetUserEntity();
             for (Integer secondaryUserId : assetCreate.getSecondaryUsersIds()){
@@ -103,11 +99,14 @@ public class AssetService {
         // set asset as operational status to "Operational"
         changeAssetOperationalStatus(1, assetEntity.getId());
 
+        //if asset is assigned to primary user, then set status as checked in.
+        if (assetCreate.getPrimaryUserId() != null){
+            setAssetAsCheckedInOrCheckedOut(assetEntity.getId(), assetCreate.getPrimaryUserId(), "Checked in", null);
+        }
 
-        return null;
+
+        return assetMapper.assetEntityToAsset(assetEntity);
     }
-
-
 
     public void changeAssetOperationalStatus (Integer operationalStatusId, Integer assetId) {
         ReliabilityLogEntity reliabilityLogEntity = new ReliabilityLogEntity();
@@ -116,5 +115,16 @@ public class AssetService {
         reliabilityLogEntity.setAssetEntity(assetRepository.findById(assetId).get());
         reliabilityLogRepository.save(reliabilityLogEntity);
     }
+
+    public void setAssetAsCheckedInOrCheckedOut(Integer assetId, Integer userId, String status, String comment){
+        CheckInCheckOutEntity checkInCheckOutEntity = new CheckInCheckOutEntity();
+        checkInCheckOutEntity.setAssetEntity(assetRepository.findById(assetId).get());
+        checkInCheckOutEntity.setUserEntity(userRepository.findById(userId).get());
+        checkInCheckOutEntity.setDateTime(LocalDateTime.now());
+        checkInCheckOutEntity.setComment(comment);
+        checkInCheckOutEntity.setStatus(status);
+    }
+
+
 
 }
