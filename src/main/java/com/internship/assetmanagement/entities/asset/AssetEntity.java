@@ -1,7 +1,8 @@
 package com.internship.assetmanagement.entities.asset;
 
-import com.internship.assetmanagement.entities.TeamEntity;
-import com.internship.assetmanagement.entities.UserEntity;
+import com.internship.assetmanagement.entities.others.CompanyEntity;
+import com.internship.assetmanagement.entities.others.LocationEntity;
+import com.internship.assetmanagement.entities.others.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +27,10 @@ public class AssetEntity implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_company_id", nullable = false)
+    private CompanyEntity userCompany;
+
     @Column(name = "description")
     private String description;
 
@@ -34,6 +39,10 @@ public class AssetEntity implements Serializable {
 
     @Column(name = "category")
     private String category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    private LocationEntity location;
 
     @Column(name = "area")
     private String area;
@@ -72,6 +81,9 @@ public class AssetEntity implements Serializable {
     @Column(name = "additional_info")
     private String additionalInfo;
 
+    @Column(name = "track_and_log_usage")
+    private Boolean trackAndLogUsage;
+
     @Column(name = "check_in_procedure")
     private String checkInProcedure;
 
@@ -79,21 +91,12 @@ public class AssetEntity implements Serializable {
     private String checkOutProcedure;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teams_id")
-    private TeamEntity team;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_user_id")
     private UserEntity primaryUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "secondary_user_id")
-    private UserEntity secondaryUser;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_asset_id")
     private AssetEntity parentAsset;
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.internship.assetmanagement.entities.vendor;
 
+import com.internship.assetmanagement.entities.others.CompanyEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class VendorEntity implements Serializable {
     private Integer id;
 
     @Column(name = "user_company_id", nullable = false)
-    private Integer userCompanyId;
+    private CompanyEntity userCompany;
 
     @Column(name = "company_name", nullable = false)
     private String companyName;

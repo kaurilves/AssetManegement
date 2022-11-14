@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.entities.asset;
+package com.internship.assetmanagement.entities.others;
 
 import java.io.Serializable;
 

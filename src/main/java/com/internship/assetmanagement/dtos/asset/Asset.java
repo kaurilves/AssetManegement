@@ -1,7 +1,6 @@
 package com.internship.assetmanagement.dtos.asset;
 
-import com.internship.assetmanagement.dtos.Team;
-import com.internship.assetmanagement.entities.UserEntity;
+import com.internship.assetmanagement.dtos.others.Team;
 import lombok.Data;
 import org.apache.tomcat.jni.User;
 
@@ -35,8 +34,8 @@ public class Asset implements Serializable {
     private String checkInProcedure;
     private String checkOutProcedure;
     private List<Team> teams;
-    private User primaryUser;
-    private List<User> secondaryUsers;
+    private String primaryUserName;
+    private List<String> secondaryUsers;
     private Asset parentAsset;
 
 
