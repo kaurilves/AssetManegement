@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.dtos;
+package com.internship.assetmanagement.dtos.user;
 
 import lombok.Data;
 

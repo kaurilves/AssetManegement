@@ -1,11 +1,10 @@
 package com.internship.assetmanagement.apis;
 
-import com.internship.assetmanagement.dtos.AccessTokens;
-import com.internship.assetmanagement.dtos.UserCreate;
-import com.internship.assetmanagement.dtos.UserLogIn;
+import com.internship.assetmanagement.dtos.user.AccessTokens;
+import com.internship.assetmanagement.dtos.user.UserCreate;
+import com.internship.assetmanagement.dtos.user.UserLogIn;
 import com.internship.assetmanagement.entities.user.UserEntity;
-import com.internship.assetmanagement.services.UserService;
-import lombok.Getter;
+import com.internship.assetmanagement.services.user.UserService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 

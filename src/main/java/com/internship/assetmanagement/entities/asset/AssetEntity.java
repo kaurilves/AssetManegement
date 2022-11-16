@@ -41,7 +41,7 @@ public class AssetEntity implements Serializable {
     private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "location_id")
     private LocationEntity location;
 
     @Column(name = "area")
@@ -51,7 +51,7 @@ public class AssetEntity implements Serializable {
     private LocalDate dateCreated;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "secondary_user_id", nullable = false)
+    @JoinColumn(name = "creator_user_id", nullable = false)
     private UserEntity creatorUser;
 
     @Column(name = "date_purchased")

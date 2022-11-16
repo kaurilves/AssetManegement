@@ -35,6 +35,8 @@ public class AssetCreate implements Serializable {
     private List<Integer> secondaryUsersIds;
     private List<Integer> teamsIds;
     private List<Integer> partsIds;
+    private List<Integer> customerIds;
+    private List<Integer> vendorIds;
     private Integer parentAssetId;
 
 }

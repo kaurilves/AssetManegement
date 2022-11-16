@@ -1,13 +1,12 @@
 package com.internship.assetmanagement.apis;
 
 import com.internship.assetmanagement.dtos.vendor.*;
-import com.internship.assetmanagement.services.AccessManager;
+import com.internship.assetmanagement.services.user.AccessManager;
 import com.internship.assetmanagement.services.vendor.CustomFieldService;
 import com.internship.assetmanagement.services.vendor.VendorService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController

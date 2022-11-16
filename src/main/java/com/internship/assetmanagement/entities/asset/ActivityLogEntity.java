@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "asset_team")
+@Table(name = "activity_log")
 public class ActivityLogEntity implements Serializable {
 
     @Id

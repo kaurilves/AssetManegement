@@ -1,4 +1,4 @@
-package com.internship.assetmanagement.services;
+package com.internship.assetmanagement.services.user;
 
 import com.internship.assetmanagement.entities.user.UserEntity;
 import lombok.RequiredArgsConstructor;

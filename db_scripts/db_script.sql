@@ -1,4 +1,3 @@
-
 -- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -20,11 +19,24 @@ CREATE SCHEMA IF NOT EXISTS `asset_management` DEFAULT CHARACTER SET utf8mb4 COL
 USE `asset_management` ;
 
 -- -----------------------------------------------------
--- Table `asset_management`.`customer`
+-- Table `asset_management`.`company`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`customer` (
+CREATE TABLE IF NOT EXISTS `asset_management`.`company` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`location`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`location` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -36,32 +48,14 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `asset_management`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`company`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`company` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`location`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`location` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`))
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -88,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`asset` (
   `date_placed_in_service` DATE NULL DEFAULT NULL,
   `date_warranty_ends` DATE NULL DEFAULT NULL,
   `additional_info` VARCHAR(255) NULL DEFAULT NULL,
-  `track_and_log_usage` TINYINT NOT NULL DEFAULT 0,
+  `track_and_log_usage` TINYINT NOT NULL DEFAULT '0',
   `check_in_procedure` VARCHAR(255) NULL DEFAULT NULL,
   `check_out_procedure` VARCHAR(255) NULL DEFAULT NULL,
   `primary_user_id` INT NULL DEFAULT NULL,
@@ -102,6 +96,12 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`asset` (
   INDEX `fk_assets_assets1_idx` (`parent_asset_id` ASC) VISIBLE,
   INDEX `fk_asset_company1_idx` (`user_company_id` ASC) VISIBLE,
   INDEX `fk_asset_location1_idx` (`location_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_company1`
+    FOREIGN KEY (`user_company_id`)
+    REFERENCES `asset_management`.`company` (`id`),
+  CONSTRAINT `fk_asset_location1`
+    FOREIGN KEY (`location_id`)
+    REFERENCES `asset_management`.`location` (`id`),
   CONSTRAINT `fk_assets_assets1`
     FOREIGN KEY (`parent_asset_id`)
     REFERENCES `asset_management`.`asset` (`id`),
@@ -110,17 +110,43 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`asset` (
     REFERENCES `asset_management`.`user` (`id`),
   CONSTRAINT `fk_assets_users3`
     FOREIGN KEY (`creator_user_id`)
-    REFERENCES `asset_management`.`user` (`id`),
-  CONSTRAINT `fk_asset_company1`
-    FOREIGN KEY (`user_company_id`)
-    REFERENCES `asset_management`.`company` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asset_location1`
-    FOREIGN KEY (`location_id`)
-    REFERENCES `asset_management`.`location` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `asset_management`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`activity_log`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`activity_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `asset_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `activity_type` VARCHAR(45) NOT NULL,
+  `comment` VARCHAR(500) CHARACTER SET 'ascii' NULL DEFAULT NULL,
+  `timestamp` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_activity_log_asset1_idx` (`asset_id` ASC) VISIBLE,
+  INDEX `fk_activity_log_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_activity_log_asset1`
+    FOREIGN KEY (`asset_id`)
+    REFERENCES `asset_management`.`asset` (`id`),
+  CONSTRAINT `fk_activity_log_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `asset_management`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`customer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`customer` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -148,74 +174,6 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`operational_status`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`operational_status` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL DEFAULT NULL,
-  `company_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_asset_reliability_status_company1_idx` (`company_id` ASC) VISIBLE,
-  CONSTRAINT `fk_asset_reliability_status_company1`
-    FOREIGN KEY (`company_id`)
-    REFERENCES `asset_management`.`company` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`vendor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`vendor` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `user_company_id` INT NOT NULL,
-  `company_name` VARCHAR(255) NOT NULL,
-  `address` VARCHAR(255) NULL DEFAULT NULL,
-  `website` VARCHAR(255) NULL DEFAULT NULL,
-  `contact_name` VARCHAR(255) NULL DEFAULT NULL,
-  `email` VARCHAR(255) NULL DEFAULT NULL,
-  `vendor_type` VARCHAR(255) NULL DEFAULT NULL,
-  `description` VARCHAR(255) NULL DEFAULT NULL,
-  `rate` DECIMAL(13,2) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `idtable1_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `company_name_UNIQUE` (`company_name` ASC) VISIBLE,
-  INDEX `fk_vendor_company1_idx` (`user_company_id` ASC) VISIBLE,
-  CONSTRAINT `fk_vendor_company1`
-    FOREIGN KEY (`user_company_id`)
-    REFERENCES `asset_management`.`company` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`asset_vendor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`asset_vendor` (
-  `id` INT UNSIGNED NOT NULL,
-  `asset_id` INT NOT NULL,
-  `vendor_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_asset_vendor_assets1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_asset_vendor_vendors1_idx` (`vendor_id` ASC) VISIBLE,
-  CONSTRAINT `fk_asset_vendor_assets1`
-    FOREIGN KEY (`asset_id`)
-    REFERENCES `asset_management`.`asset` (`id`),
-  CONSTRAINT `fk_asset_vendor_vendors1`
-    FOREIGN KEY (`vendor_id`)
-    REFERENCES `asset_management`.`vendor` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
 -- Table `asset_management`.`asset_in_location`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `asset_management`.`asset_in_location` (
@@ -231,44 +189,6 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`asset_in_location` (
   CONSTRAINT `fk_assets_in_locations_locations1`
     FOREIGN KEY (`location_id`)
     REFERENCES `asset_management`.`location` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`checkin_checkout`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`checkin_checkout` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `asset_id` INT NOT NULL,
-  `timestamp` DATETIME NULL DEFAULT NULL,
-  `status` VARCHAR(10) NULL DEFAULT NULL,
-  `comment` VARCHAR(255) NULL DEFAULT NULL,
-  `users_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_checkin_checkout_assets1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_checkin_checkout_users1_idx` (`users_id` ASC) VISIBLE,
-  CONSTRAINT `fk_checkin_checkout_assets1`
-    FOREIGN KEY (`asset_id`)
-    REFERENCES `asset_management`.`asset` (`id`),
-  CONSTRAINT `fk_checkin_checkout_users1`
-    FOREIGN KEY (`users_id`)
-    REFERENCES `asset_management`.`user` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`custom_field`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`custom_field` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `value` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -308,22 +228,21 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`reliability_log`
+-- Table `asset_management`.`asset_secondary_user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`reliability_log` (
+CREATE TABLE IF NOT EXISTS `asset_management`.`asset_secondary_user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asset_id` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL,
-  `operatioanl_status_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_reliability_log_assets1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`operatioanl_status_id` ASC) VISIBLE,
-  CONSTRAINT `fk_reliability_asset_reliability_statuses1`
-    FOREIGN KEY (`operatioanl_status_id`)
-    REFERENCES `asset_management`.`operational_status` (`id`),
-  CONSTRAINT `fk_reliability_log_assets1`
+  INDEX `fk_asset_secondary_user_asset1_idx` (`asset_id` ASC) VISIBLE,
+  INDEX `fk_asset_secondary_user_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_secondary_user_asset1`
     FOREIGN KEY (`asset_id`)
-    REFERENCES `asset_management`.`asset` (`id`))
+    REFERENCES `asset_management`.`asset` (`id`),
+  CONSTRAINT `fk_asset_secondary_user_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `asset_management`.`user` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -336,6 +255,144 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`team` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`asset_team`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`asset_team` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `asset_id` INT NOT NULL,
+  `team_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_asset_team_asset1_idx` (`asset_id` ASC) VISIBLE,
+  INDEX `fk_asset_team_team1_idx` (`team_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_team_asset1`
+    FOREIGN KEY (`asset_id`)
+    REFERENCES `asset_management`.`asset` (`id`),
+  CONSTRAINT `fk_asset_team_team1`
+    FOREIGN KEY (`team_id`)
+    REFERENCES `asset_management`.`team` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`asset_usage_log`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`asset_usage_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `is_checked_in` TINYINT NOT NULL DEFAULT '0',
+  `comment` VARCHAR(255) NULL DEFAULT NULL,
+  `activity_log_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_asset_usage_log_activity_log1_idx` (`activity_log_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_usage_log_activity_log1`
+    FOREIGN KEY (`activity_log_id`)
+    REFERENCES `asset_management`.`activity_log` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`vendor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`vendor` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_company_id` INT NOT NULL,
+  `company_name` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NULL DEFAULT NULL,
+  `website` VARCHAR(255) NULL DEFAULT NULL,
+  `contact_name` VARCHAR(255) NULL DEFAULT NULL,
+  `email` VARCHAR(255) NULL DEFAULT NULL,
+  `vendor_type` VARCHAR(255) NULL DEFAULT NULL,
+  `description` VARCHAR(255) NULL DEFAULT NULL,
+  `rate` DECIMAL(13,2) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idtable1_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `company_name_UNIQUE` (`company_name` ASC) VISIBLE,
+  INDEX `fk_vendor_company1_idx` (`user_company_id` ASC) VISIBLE,
+  CONSTRAINT `fk_vendor_company1`
+    FOREIGN KEY (`user_company_id`)
+    REFERENCES `asset_management`.`company` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`asset_vendor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`asset_vendor` (
+  `id` INT UNSIGNED NOT NULL,
+  `asset_id` INT NOT NULL,
+  `vendor_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_asset_vendor_assets1_idx` (`asset_id` ASC) VISIBLE,
+  INDEX `fk_asset_vendor_vendors1_idx` (`vendor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_vendor_assets1`
+    FOREIGN KEY (`asset_id`)
+    REFERENCES `asset_management`.`asset` (`id`),
+  CONSTRAINT `fk_asset_vendor_vendors1`
+    FOREIGN KEY (`vendor_id`)
+    REFERENCES `asset_management`.`vendor` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`custom_field`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`custom_field` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `value` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`operational_status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`operational_status` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `company_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_asset_reliability_status_company1_idx` (`company_id` ASC) VISIBLE,
+  CONSTRAINT `fk_asset_reliability_status_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `asset_management`.`company` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `asset_management`.`reliability_log`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `asset_management`.`reliability_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `operatioanl_status_id` INT NOT NULL DEFAULT '1',
+  `activity_log_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`operatioanl_status_id` ASC) VISIBLE,
+  INDEX `fk_reliability_log_activity_log1_idx` (`activity_log_id` ASC) VISIBLE,
+  CONSTRAINT `fk_reliability_asset_reliability_statuses1`
+    FOREIGN KEY (`operatioanl_status_id`)
+    REFERENCES `asset_management`.`operational_status` (`id`),
+  CONSTRAINT `fk_reliability_log_activity_log1`
+    FOREIGN KEY (`activity_log_id`)
+    REFERENCES `asset_management`.`activity_log` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -364,49 +421,19 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `asset_management`.`asset_secondary_user`
+-- Table `asset_management`.`zxcszfdczsdfcxz`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`asset_secondary_user` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `asset_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_asset_secondary_user_asset1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_asset_secondary_user_user1_idx` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `fk_asset_secondary_user_asset1`
-    FOREIGN KEY (`asset_id`)
-    REFERENCES `asset_management`.`asset` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asset_secondary_user_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `asset_management`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`asset_team`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`asset_team` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `asset_id` INT NOT NULL,
-  `team_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_asset_team_asset1_idx` (`asset_id` ASC) VISIBLE,
-  INDEX `fk_asset_team_team1_idx` (`team_id` ASC) VISIBLE,
-  CONSTRAINT `fk_asset_team_asset1`
-    FOREIGN KEY (`asset_id`)
-    REFERENCES `asset_management`.`asset` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asset_team_team1`
-    FOREIGN KEY (`team_id`)
-    REFERENCES `asset_management`.`team` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `asset_management`.`zxcszfdczsdfcxz` (
+  `idasdasd` INT NOT NULL,
+  `asd` VARCHAR(45) NULL DEFAULT NULL,
+  `a` VARCHAR(45) NULL DEFAULT NULL,
+  `asdcol` VARCHAR(45) NULL DEFAULT NULL,
+  `asdcol1` VARCHAR(45) NULL DEFAULT NULL,
+  `asdcol2` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idasdasd`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

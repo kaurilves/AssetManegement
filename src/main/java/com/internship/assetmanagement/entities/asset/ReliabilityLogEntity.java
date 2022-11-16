@@ -25,7 +25,7 @@ public class ReliabilityLogEntity implements Serializable {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_log", nullable = false)
+    @JoinColumn(name = "activity_log_id", nullable = false)
     private ActivityLogEntity activityLogEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

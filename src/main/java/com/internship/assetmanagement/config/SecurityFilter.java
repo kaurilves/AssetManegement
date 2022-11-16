@@ -1,6 +1,6 @@
 package com.internship.assetmanagement.config;
 
-import com.internship.assetmanagement.services.UserService;
+import com.internship.assetmanagement.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.*;

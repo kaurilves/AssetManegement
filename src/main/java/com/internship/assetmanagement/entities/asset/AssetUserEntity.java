@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "asset_team")
+@Table(name = "asset_user")
 public class AssetUserEntity implements Serializable {
 
     @Id

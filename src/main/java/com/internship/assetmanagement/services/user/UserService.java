@@ -1,8 +1,8 @@
-package com.internship.assetmanagement.services;
+package com.internship.assetmanagement.services.user;
 
-import com.internship.assetmanagement.dtos.AccessTokens;
-import com.internship.assetmanagement.dtos.UserCreate;
-import com.internship.assetmanagement.dtos.UserLogIn;
+import com.internship.assetmanagement.dtos.user.AccessTokens;
+import com.internship.assetmanagement.dtos.user.UserCreate;
+import com.internship.assetmanagement.dtos.user.UserLogIn;
 import com.internship.assetmanagement.entities.user.UserEntity;
 import com.internship.assetmanagement.mappers.UserMapper;
 import com.internship.assetmanagement.repositories.other.UserRepository;
@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public AccessTokens getToken (UserEntity userEntity) {
-        // TODO: JWT_SECRET should not be used for both tokens, every token should have different secret key
+        //TODO: JWT_SECRET should not be used for both tokens, every token should have different secret key
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("uid", userEntity.getId());
