@@ -1,8 +1,9 @@
 package com.internship.assetmanagement.mappers;
 
+import com.internship.assetmanagement.dtos.others.User;
 import com.internship.assetmanagement.dtos.user.UserCreate;
 import com.internship.assetmanagement.entities.user.UserEntity;
-import org.apache.tomcat.jni.User;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

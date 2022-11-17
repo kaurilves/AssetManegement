@@ -382,13 +382,13 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `asset_management`.`reliability_log` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `operatioanl_status_id` INT NOT NULL DEFAULT '1',
+  `operational_status_id` INT NOT NULL DEFAULT '1',
   `activity_log_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`operatioanl_status_id` ASC) VISIBLE,
+  INDEX `fk_reliability_asset_reliability_statuses1_idx` (`operational_status_id` ASC) VISIBLE,
   INDEX `fk_reliability_log_activity_log1_idx` (`activity_log_id` ASC) VISIBLE,
   CONSTRAINT `fk_reliability_asset_reliability_statuses1`
-    FOREIGN KEY (`operatioanl_status_id`)
+    FOREIGN KEY (`operational_status_id`)
     REFERENCES `asset_management`.`operational_status` (`id`),
   CONSTRAINT `fk_reliability_log_activity_log1`
     FOREIGN KEY (`activity_log_id`)
@@ -418,23 +418,6 @@ CREATE TABLE IF NOT EXISTS `asset_management`.`vendor_custom_field` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `asset_management`.`zxcszfdczsdfcxz`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `asset_management`.`zxcszfdczsdfcxz` (
-  `idasdasd` INT NOT NULL,
-  `asd` VARCHAR(45) NULL DEFAULT NULL,
-  `a` VARCHAR(45) NULL DEFAULT NULL,
-  `asdcol` VARCHAR(45) NULL DEFAULT NULL,
-  `asdcol1` VARCHAR(45) NULL DEFAULT NULL,
-  `asdcol2` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`idasdasd`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

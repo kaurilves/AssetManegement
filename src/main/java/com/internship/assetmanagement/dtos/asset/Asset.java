@@ -1,8 +1,8 @@
 package com.internship.assetmanagement.dtos.asset;
 
 import com.internship.assetmanagement.dtos.others.Location;
+import com.internship.assetmanagement.dtos.others.User;
 import lombok.Data;
-import org.apache.tomcat.jni.User;
 
 import javax.servlet.http.Part;
 import java.io.Serializable;
@@ -44,7 +44,7 @@ public class Asset implements Serializable {
     private List<Part> parts;
     private List<String> vendors; //+
     private List<String> customers;
-    private String checkedInOrOut; //+
+    private Boolean isCheckedIn; //+
     private String operationalStatus; //+
     private LocalDateTime lastTimeCheckedIn; //+
     private Integer numberOfCheckOuts; //+
