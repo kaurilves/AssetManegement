@@ -32,8 +32,8 @@ public class AssetController {
         return assetService.getAsset(assetId);
     }
 
-    @GetMapping("/{userCompanyId}")
-    public List<Asset> getAllAssets(@PathVariable Integer userCompanyId) {
+    @GetMapping("/assets/{userCompanyId}")
+    public List<Asset> getAllAssets(@PathVariable Integer userCompanyId) throws Exception {
         return assetService.getAllAssets(userCompanyId);
     }
 
