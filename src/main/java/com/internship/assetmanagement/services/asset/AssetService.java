@@ -384,19 +384,23 @@ public class AssetService {
     public void deleteAsset(Integer assetId) {
     }
 
-    public List<Asset> getAllAssets(Integer userCompanyId) {
+    public List<Asset> getAllAssets(Integer userCompanyId) throws Exception {
         List<AssetEntity> assetEntities = assetRepository.findAllByUserCompanyId(userCompanyId);
         List<Asset> assets = assetMapper.assetEntitiesToAssets(assetEntities);
-        for (Asset asset : assets) {
-            if (assetEntity.getPrimaryUser() != null) {
-                asset.setPrimaryUser(userMapper.userEntityToUser(assetEntity.getPrimaryUser()));
-            }
-            if (assetEntity.getParentAsset() != null) {
-                asset.setParentAsset(getAsset(assetEntity.getParentAsset().getId()));
-            }
-            if (assetEntity.getLocation() != null) {
-                asset.setLocation(locationMapper.locationEntityToLocation(assetEntity.getLocation()));
+        for (AssetEntity assetEntity : assetEntities) {
+            for (Asset asset : assets) {
+                asset.setCreatorUser(userMapper.userEntityToUser(assetEntity.getCreatorUser()));
+                if (assetEntity.getPrimaryUser() != null) {
+                    asset.setPrimaryUser(userMapper.userEntityToUser(assetEntity.getPrimaryUser()));
+                }
+                if (assetEntity.getParentAsset() != null) {
+                    asset.setParentAsset(getAsset(assetEntity.getParentAsset().getId()));
+                }
+                if (assetEntity.getLocation() != null) {
+                    asset.setLocation(locationMapper.locationEntityToLocation(assetEntity.getLocation()));
+                }
             }
         }
+        return assets;
     }
 }
